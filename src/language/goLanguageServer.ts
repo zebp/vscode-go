@@ -23,6 +23,7 @@ import {
 	ErrorAction,
 	ExecuteCommandSignature,
 	HandleDiagnosticsSignature,
+	HoverRequest,
 	InitializeError,
 	InitializeResult,
 	LanguageClientOptions,
@@ -30,6 +31,7 @@ import {
 	ProvideCodeLensesSignature,
 	ProvideCompletionItemsSignature,
 	ProvideDocumentFormattingEditsSignature,
+	ProvideHoverSignature,
 	ResponseError,
 	RevealOutputChannelOn
 } from 'vscode-languageclient';
@@ -440,6 +442,25 @@ export async function buildLanguageClient(
 				}
 			},
 			middleware: {
+				provideHover: async (
+					document: vscode.TextDocument,
+					position: vscode.Position,
+					token: CancellationToken,
+					next: ProvideHoverSignature
+				) => {
+					const { contents, range } = await next(document, position, token);
+					const newContents: typeof contents = [];
+
+					for (const content of contents) {
+						if (content instanceof vscode.MarkdownString) {
+							// content.isTrusted = true;
+						}
+
+						newContents.push(content);
+					}
+
+					return new vscode.Hover(newContents, range);
+				},
 				executeCommand: async (command: string, args: any[], next: ExecuteCommandSignature) => {
 					try {
 						return await next(command, args);
