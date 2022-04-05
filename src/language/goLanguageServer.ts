@@ -23,7 +23,6 @@ import {
 	ErrorAction,
 	ExecuteCommandSignature,
 	HandleDiagnosticsSignature,
-	HoverRequest,
 	InitializeError,
 	InitializeResult,
 	LanguageClientOptions,
@@ -448,12 +447,15 @@ export async function buildLanguageClient(
 					token: CancellationToken,
 					next: ProvideHoverSignature
 				) => {
-					const { contents, range } = await next(document, position, token);
+					const hover = await next(document, position, token);
+					if (!hover) return;
+
+					const { contents, range } = hover;
 					const newContents: typeof contents = [];
 
 					for (const content of contents) {
 						if (content instanceof vscode.MarkdownString) {
-							// content.isTrusted = true;
+							content.isTrusted = true;
 						}
 
 						newContents.push(content);

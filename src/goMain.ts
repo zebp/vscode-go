@@ -65,9 +65,9 @@ import { GoTestExplorer, isVscodeTestingAPIAvailable } from './goTest/explore';
 import { killRunningPprof } from './goTest/profile';
 import { GoExplorerProvider } from './goExplorer';
 import { VulncheckProvider, VulncheckResultViewProvider } from './goVulncheck';
-
 import { GoExtensionContext } from './context';
 import * as commands from './commands';
+import { gotoLocation } from './commands/gotoLocation';
 
 const goCtx: GoExtensionContext = {};
 
@@ -195,6 +195,7 @@ export async function activate(ctx: vscode.ExtensionContext): Promise<ExtensionA
 	registerCommand('go.global.resetState', resetGlobalState);
 	registerCommand('go.toggle.gc_details', commands.toggleGCDetails);
 	registerCommand('go.apply.coverprofile', commands.applyCoverprofile);
+	registerCommand('go.gotoLocation', gotoLocation);
 
 	// Go Environment switching commands
 	registerCommand('go.environment.choose', chooseGoEnvironment);
