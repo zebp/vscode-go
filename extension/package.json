@@ -414,6 +414,11 @@
         "description": "Run `go get -v` on the package on the current line."
       },
       {
+        "command": "go.goto.location",
+        "title": "Go: Goto location",
+        "description": "Jump directly to a position within a file."
+      },
+      {
         "command": "go.playground",
         "title": "Go: Run on Go Playground",
         "description": "Upload the current selection or file to the Go Playground"

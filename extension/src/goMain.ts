@@ -73,6 +73,7 @@ import * as commands from './commands';
 import { toggleVulncheckCommandFactory } from './goVulncheck';
 import { GoTaskProvider } from './goTaskProvider';
 import { telemetryReporter } from './goTelemetry';
+import { gotoLocation } from './commands/gotoLocation';
 
 const goCtx: GoExtensionContext = {};
 
@@ -180,6 +181,7 @@ export async function activate(ctx: vscode.ExtensionContext): Promise<ExtensionA
 	registerCommand('go.toggle.test.file', goGenerateTests.toggleTestFile);
 	registerCommand('go.debug.startSession', commands.startDebugSession);
 	registerCommand('go.show.commands', commands.showCommands);
+	registerCommand('go.goto.location', gotoLocation);
 	registerCommand('go.get.package', goGetPackage);
 	registerCommand('go.playground', playgroundCommand);
 	registerCommand('go.lint.package', lintCode('package'));

@@ -32,6 +32,7 @@ import {
 	ProvideCodeLensesSignature,
 	ProvideCompletionItemsSignature,
 	ProvideDocumentFormattingEditsSignature,
+	ProvideHoverSignature,
 	ResponseError,
 	RevealOutputChannelOn
 } from 'vscode-languageclient';
@@ -486,6 +487,28 @@ export async function buildLanguageClient(
 				}
 			},
 			middleware: {
+				provideHover: async (
+					document: vscode.TextDocument,
+					position: vscode.Position,
+					token: CancellationToken,
+					next: ProvideHoverSignature
+				) => {
+					const hover = await next(document, position, token);
+					if (!hover) return;
+
+					const { contents, range } = hover;
+					const newContents: typeof contents = [];
+
+					for (const content of contents) {
+						if (content instanceof vscode.MarkdownString) {
+							content.isTrusted = true;
+						}
+
+						newContents.push(content);
+					}
+
+					return new vscode.Hover(newContents, range);
+				},
 				handleWorkDoneProgress: async (token, params, next) => {
 					switch (params.kind) {
 						case 'begin':
